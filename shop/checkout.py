@@ -4,6 +4,7 @@ import time
 from langfuse import get_client, observe
 
 from .catalog import PRODUCTS
+from .errors import report_error
 from .pricing import apply_discount
 
 
@@ -39,5 +40,5 @@ def checkout(cart: dict[str, int], coupon: str | None = None) -> dict:
         total = apply_discount(subtotal, coupon)
         return {"payment_id": charge_payment(total), "total": total}
     except Exception as exc:
-        get_client().update_current_span(level="ERROR", status_message=f"{type(exc).__name__}: {exc}")
+        report_error(exc)
         raise
