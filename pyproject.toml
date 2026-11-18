@@ -1,0 +1,9 @@
+[project]
+name = "humai-business-app"
+version = "0.1.0"
+description = "E-commerce demo instrumentado con Langfuse"
+requires-python = ">=3.11"
+dependencies = ["langfuse>=3", "python-dotenv>=1.0"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
