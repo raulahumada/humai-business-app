@@ -4,12 +4,8 @@ import time
 from langfuse import get_client, observe
 
 from .catalog import PRODUCTS
-from .errors import report_error
+from .errors import OutOfStock, report_error
 from .pricing import apply_discount
-
-
-class OutOfStock(Exception):
-    pass
 
 
 @observe(name="reserve_stock")
@@ -18,7 +14,7 @@ def reserve_stock(cart: dict[str, int]) -> float:
     for sku, qty in cart.items():
         product = PRODUCTS[sku]
         if product["stock"] < qty:
-            raise OutOfStock(f"{sku}: sin stock suficiente")
+            raise OutOfStock(sku, requested=qty, available=product["stock"])
         subtotal += product["price"] * qty
     return subtotal
 
