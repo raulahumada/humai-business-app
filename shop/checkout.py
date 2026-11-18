@@ -31,10 +31,16 @@ def charge_payment(amount: float) -> str:
 
 @observe(name="checkout")
 def checkout(cart: dict[str, int], coupon: str | None = None) -> dict:
-    try:
-        subtotal = reserve_stock(cart)
-        total = apply_discount(subtotal, coupon)
-        return {"payment_id": charge_payment(total), "total": total}
+    # Nueva verificación de disponibilidad de stock
+    for sku, qty in cart.items():
+        product = PRODUCTS[sku]
+        if product["stock"] < qty:
+            raise OutOfStock(sku, requested=qty, available=product["stock"])
+
+    subtotal = reserve_stock(cart)
+    total = apply_discount(subtotal, coupon)
+    return {"payment_id": charge_payment(total), "total": total}
+    
     except Exception as exc:
         report_error(exc)
         raise
