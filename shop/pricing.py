@@ -10,7 +10,8 @@ def apply_discount(subtotal: float, coupon: str | None) -> float:
     """Aplica un cupón de descuento al subtotal."""
     if not coupon:
         return subtotal
-    if coupon not in COUPONS:
+    normalized_coupon = coupon.upper()
+    if normalized_coupon not in COUPONS:
         raise InvalidCoupon(coupon, valid=list(COUPONS))
-    rate = COUPONS[coupon]
+    rate = COUPONS[normalized_coupon]
     return round(subtotal * (1 - rate), 2)
