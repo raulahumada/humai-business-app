@@ -9,10 +9,9 @@ def test_uppercase_coupon():
     assert apply_discount(100, "WELCOME10") == 90.0
 
 
-def test_lowercase_coupon_gives_clear_error():
-    import pytest
+def test_lowercase_coupon_is_accepted():
+    assert apply_discount(100, "welcome10") == 90.0
 
-    from shop.errors import InvalidCoupon
 
-    with pytest.raises(InvalidCoupon, match="no válido"):
-        apply_discount(100, "welcome10")
+def test_mixed_case_coupon_is_accepted():
+    assert apply_discount(100, "ViP20") == 80.0
